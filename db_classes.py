@@ -156,7 +156,7 @@ class MemoryObject(BASE):
     def __str__(self):
         return 'MemoryObject(uuid={}, base_object_host_id={}, base_object_permission={}, memory_address={}, page_number={}, page_offset={}, size={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.memory_address, self.page_number, self.page_offset, self.size)
 
-class NetflowObject(BASE):
+class NetFlowObject(BASE):
     __tablename__ = 'NetflowObject'
     __table_args__ = {'extend_existing': True}
     uuid = Column(String(256), primary_key=True)
@@ -181,7 +181,7 @@ class NetflowObject(BASE):
         self.file_descriptor = file_descriptor
 
     def __str__(self):
-        return 'NetflowObject(uuid={}, base_object_host_id={}, base_object_permission={}, local_address={}, local_port={}, remote_address={}, remote_port={}, ip_protocol={}, file_descriptor={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.local_address, self.local_port, self.remote_address, self.remote_port, self.ip_protocol, self.file_descriptor)
+        return 'NetFlowObject(uuid={}, base_object_host_id={}, base_object_permission={}, local_address={}, local_port={}, remote_address={}, remote_port={}, ip_protocol={}, file_descriptor={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.local_address, self.local_port, self.remote_address, self.remote_port, self.ip_protocol, self.file_descriptor)
 
 
 class SrcSinkObject(BASE):
@@ -232,7 +232,7 @@ class PacketSocketObject(BASE):
 class Host(BASE):
     __tablename__ = 'Host'
     __table_args__ = {'extend_existing': True}
-    host_id = Column(String(256), primary_key=True)
+    uuid = Column(String(256), primary_key=True)
     host_name = Column(String(256))
     os_details = Column(String(256))
     host_type = Column(String(256))

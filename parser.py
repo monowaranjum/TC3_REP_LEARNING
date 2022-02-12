@@ -14,19 +14,44 @@ def parse_subject(json_subject):
     uuid = json_subject['uuid']
     type = json_subject['type']
     cid = json_subject['cid']
-    parent_subject = json_subject['parentSubject']
+    
+    parent_subject = None
+    if json_subject['parentSubject'] is not None:
+        parent_subject = json_subject['parentSubject']['com.bbn.tc.schema.avro.cdm18.UUID']
+    
     host_id = json_subject['hostId']
     local_prinicpal = json_subject['localPrincipal']
-    start_time_stamp_nanos = json_subject['startTimeStampNanos']
-    unit_id = json_subject['unitId']
-    iteration = json_subject['iteration']
-    count = json_subject['count']
-    cmd_line = json_subject['cmdLine']
-    privelege_level = json_subject['privelegeLevel']
-    imported_libraries = json_subject['importedLibraries']
-    exported_libraries = json_subject['exportedLibraries']
+    start_time_stamp_nanos = json_subject['startTimestampNanos']
+    
+    unit_id = None
+    if json_subject['unitId'] is not None:
+        unit_id = json_subject['unitId']['int']
+    
+    iteration = None
+    if json_subject['iteration'] is not None:
+        iteration = json_subject['iteration']['int']
 
-    subject = orm.Subject(uuid, type, cid, parent_subject, host_id, local_prinicpal, start_time_stamp_nanos, unit_id, iteration, count, cmd_line, privelege_level, imported_libraries, exported_libraries)
+    count = None
+    if json_subject['count'] is not None:
+        count = json_subject['count']['int']
+    
+    cmd_line = None
+    if json_subject['cmdLine'] is not None:
+        cmd_line = json_subject['cmdLine']['string']
+    
+    privilege_level = None
+    if json_subject['privilegeLevel'] is not None:
+        privilege_level = json_subject['privilegeLevel']
+
+    imported_libraries = None
+    if json_subject['importedLibraries'] is not None:
+        imported_libraries = json_subject['importedLibraries'].tostring()
+
+    exported_libraries = None
+    if json_subject['exportedLibraries'] is not None:
+        exported_libraries = json_subject['exportedLibraries'].tostring()
+
+    subject = orm.Subject(uuid, type, cid, parent_subject, host_id, local_prinicpal, start_time_stamp_nanos, unit_id, iteration, count, cmd_line, privilege_level, imported_libraries, exported_libraries)
 
     return subject
 
@@ -37,22 +62,54 @@ def parse_event(json_event):
     and populate the Event ORM object.
     '''
     uuid = json_event['uuid']
-    sequence = json_event['sequence']["long"]
+    sequence = None
+    if json_event['sequence'] is not None:
+        sequence = json_event['sequence']["long"]
     type = json_event['type']
-    thread_id = json_event['threadId']["int"]
+    thread_id = None
+    if json_event['threadId'] is not None:
+        thread_id = json_event['threadId']["int"]
     host_id = json_event['hostId']
-    subject = json_event['subject']["com.bbn.tc.schema.avro.cdm18.UUID"]
-    predicate_object = json_event['predicateObject']
-    predicate_object_path = json_event['predicateObjectPath']
-    predicate_object_2 = json_event['predicateObject2']
-    predicate_object_path_2 = json_event['predicateObjectPath2']
-    time_stamp_nanos = json_event['timeStampNanos']
-    name = json_event['name']['string']
-    location = json_event['location']
-    size = json_event['size']
-    program_point = json_event['programPoint']
+    
+    subject = None
+    if json_event['subject'] is not None:
+        subject = json_event['subject']["com.bbn.tc.schema.avro.cdm18.UUID"]
+    
+    predicate_object = None
+    if json_event['predicateObject'] is not None:
+        predicate_object = json_event['predicateObject']["com.bbn.tc.schema.avro.cdm18.UUID"]
+    
+    predicate_object_path = None
+    if json_event['predicateObjectPath'] is not None:
+        predicate_object_path = json_event['predicateObjectPath']['string']
 
-    event = orm.Event(uuid, sequence, type, thread_id, host_id, subject, predicate_object, predicate_object_path, predicate_object_2, predicate_object_path_2, time_stamp_nanos, name, location, size, program_point)
+    predicate_object_2 = None
+    if json_event['predicateObject2'] is not None:
+        predicate_object_2 = json_event['predicateObject2']["com.bbn.tc.schema.avro.cdm18.UUID"]
+    
+    predicate_object2_path = None
+    if json_event['predicateObject2Path'] is not None:
+        predicate_object2_path = json_event['predicateObject2Path']['string']
+    
+    time_stamp_nanos = json_event['timestampNanos']
+    
+    name = None
+    if json_event['name'] is not None:
+        name = json_event['name']['string']
+
+    location = None
+    if json_event['location'] is not None:
+        location = json_event['location']['long']
+    
+    size = None
+    if json_event['size'] is not None:
+        size = json_event['size']['long']    
+    
+    program_point = None
+    if json_event['programPoint'] is not None:
+        program_point = json_event['programPoint']['string']
+    
+    event = orm.Event(uuid, sequence, type, thread_id, host_id, subject, predicate_object, predicate_object_path, predicate_object_2, predicate_object2_path, time_stamp_nanos, name, location, size, program_point)
 
     return event
 
@@ -62,109 +119,174 @@ def parse_file_object(json_file_object):
     and populate the File ORM object.
     '''
     uuid = json_file_object['uuid']
-    base_object_host_id = json_file_object['baseObject']['hostId']
-    base_object_permission = json_file_object['baseObject']['permission']
+    
+    base_object_host_id = None
+    base_object_permission = None
+
+    if json_file_object['baseObject'] is not None:
+        base_object_host_id = json_file_object['baseObject']['hostId']
+        base_object_permission = json_file_object['baseObject']['permission']
     type = json_file_object['type']
-    file_descriptor = json_file_object['fileDescriptor']
-    local_principal = json_file_object['localPrincipal']
-    size = json_file_object['size']
+    file_descriptor = None
+    
+    if json_file_object['fileDescriptor'] is not None:
+        file_descriptor = json_file_object['fileDescriptor']['int']
+    
+    local_principal = None
+    if json_file_object['localPrincipal'] is not None:
+        local_principal = json_file_object['localPrincipal']['com.bbn.tc.schema.avro.cdm18.UUID']
+    
+    size = None
+    if json_file_object['size'] is not None:
+        size = json_file_object['size']['long']
 
     file_object = orm.FileObject(uuid, base_object_host_id, base_object_permission, type, file_descriptor, local_principal, size)
 
     return file_object
 
 
-def unnamed_pipe_object(json_unnamed_pipe_object):
+def parse_unnamed_pipe_object(json_unnamed_pipe_object):
     '''
     This function will parse the JSON object 
     and populate the UnnamedPipeObject ORM object.
     '''
     uuid = json_unnamed_pipe_object['uuid']
-    base_object_host_id = json_unnamed_pipe_object['baseObject']['hostId']
-    base_object_permission = json_unnamed_pipe_object['baseObject']['permission']
-    source_file_descriptor = json_unnamed_pipe_object['sourceFileDescriptor']
-    sink_file_descriptor = json_unnamed_pipe_object['sinkFileDescriptor']
-    source_uuid = json_unnamed_pipe_object['sourceUuid']
-    sink_uuid = json_unnamed_pipe_object['sinkUuid']
+    base_object_host_id = None
+    base_object_permission = None
+    if json_unnamed_pipe_object['baseObject'] is not None:
+        base_object_host_id = json_unnamed_pipe_object['baseObject']['hostId']
+        base_object_permission = json_unnamed_pipe_object['baseObject']['permission']
+
+    source_file_descriptor = None
+    if json_unnamed_pipe_object['sourceFileDescriptor'] is not None:
+        source_file_descriptor = json_unnamed_pipe_object['sourceFileDescriptor']['int']
+
+    sink_file_descriptor = None
+    if json_unnamed_pipe_object['sinkFileDescriptor'] is not None:
+        sink_file_descriptor = json_unnamed_pipe_object['sinkFileDescriptor']['int']
+    
+    source_uuid = None
+    if json_unnamed_pipe_object['sourceUUID'] is not None:
+        source_uuid = json_unnamed_pipe_object['sourceUUID']['com.bbn.tc.schema.avro.cdm18.UUID']
+    sink_uuid = None
+    if json_unnamed_pipe_object['sinkUUID'] is not None:
+        sink_uuid = json_unnamed_pipe_object['sinkUUID']['com.bbn.tc.schema.avro.cdm18.UUID']
 
     unnamed_pipe_object = orm.UnnamedPipeObject(uuid, base_object_host_id, base_object_permission, source_file_descriptor, sink_file_descriptor, source_uuid, sink_uuid)
 
     return unnamed_pipe_object
 
 
-def registry_key_object(json_registry_key_object):
+def parse_registry_key_object(json_registry_key_object):
     '''
     This function will parse the JSON object 
     and populate the RegistryKeyObject ORM object.
     '''
     uuid = json_registry_key_object['uuid']
-    base_object_host_id = json_registry_key_object['baseObject']['hostId']
-    base_object_permission = json_registry_key_object['baseObject']['permission']
+    base_object_host_id = None
+    base_object_permission = None
+    if json_registry_key_object['baseObject'] is not None:
+        base_object_host_id = json_registry_key_object['baseObject']['hostId']
+        base_object_permission = json_registry_key_object['baseObject']['permission']
+
     key = json_registry_key_object['key']
 
     registry_key_object = orm.RegistryKeyObject(uuid, base_object_host_id, base_object_permission, key)
 
     return registry_key_object
 
-def memory_object(json_memory_object):
+def parse_memory_object(json_memory_object):
     '''
     This function will parse the JSON object 
     and populate the MemoryObject ORM object.
     '''
     uuid = json_memory_object['uuid']
-    base_object_host_id = json_memory_object['baseObject']['hostId']
-    base_object_permission = json_memory_object['baseObject']['permission']
+    base_object_host_id = None
+    base_object_permission = None
+    if json_memory_object['baseObject'] is not None:
+        base_object_host_id = json_memory_object['baseObject']['hostId']
+        base_object_permission = json_memory_object['baseObject']['permission']
+
     memory_address = json_memory_object['memoryAddress']
-    page_number = json_memory_object['pageNumber']
-    page_offset = json_memory_object['pageOffset']
-    size = json_memory_object['size']
+    page_number = None
+    if json_memory_object['pageNumber'] is not None:
+        page_number = json_memory_object['pageNumber']['long']
+    page_offset = None
+    if json_memory_object['pageOffset'] is not None:
+        page_offset = json_memory_object['pageOffset']['long']
+    size = None
+    if json_memory_object['size'] is not None:
+        size = json_memory_object['size']['long']
     
     memory_object = orm.MemoryObject(uuid, base_object_host_id, base_object_permission, memory_address, page_number, page_offset, size)
 
     return memory_object
 
-def net_flow_object(json_net_flow_object):
+def parse_netflow_object(json_net_flow_object):
     '''
     This function will parse the JSON object 
     and populate the NetFlowObject ORM object.
     '''
     uuid = json_net_flow_object['uuid']
-    base_object_host_id = json_net_flow_object['baseObject']['hostId']
-    base_object_permission = json_net_flow_object['baseObject']['permission']
+    base_object_host_id = None
+    base_object_permission = None
+    
+    if json_net_flow_object['baseObject'] is not None:
+        base_object_host_id = json_net_flow_object['baseObject']['hostId']
+        base_object_permission = json_net_flow_object['baseObject']['permission']
+
     local_address = json_net_flow_object['localAddress']
     local_port = json_net_flow_object['localPort']
     remote_address = json_net_flow_object['remoteAddress']
     remote_port = json_net_flow_object['remotePort']
-    ip_protocol = json_net_flow_object['ipProtocol']
-    file_descriptor = json_net_flow_object['fileDescriptor']
+    ip_protocol = None
+    if json_net_flow_object['ipProtocol'] is not None:
+        ip_protocol = json_net_flow_object['ipProtocol']['int']
+    
+    file_descriptor = None
+    if json_net_flow_object['fileDescriptor'] is not None:
+        file_descriptor = json_net_flow_object['fileDescriptor']['int']
     
     net_flow_object = orm.NetFlowObject(uuid, base_object_host_id, base_object_permission, local_address, local_port, remote_address, remote_port, ip_protocol, file_descriptor)
 
     return net_flow_object
 
-def src_sink_object(json_src_sink_object):
+def parse_src_sink_object(json_src_sink_object):
     '''
     This function will parse the JSON object 
     and populate the SrcSinkObject ORM object.
     '''
     uuid = json_src_sink_object['uuid']
-    base_object_host_id = json_src_sink_object['baseObject']['hostId']
-    base_object_permission = json_src_sink_object['baseObject']['permission']
+
+    base_object_host_id = None
+    base_object_permission = None
+    
+    if json_src_sink_object['baseObject'] is not None:
+        base_object_host_id = json_src_sink_object['baseObject']['hostId']
+        base_object_permission = json_src_sink_object['baseObject']['permission']
+    
     type = json_src_sink_object['type']
-    file_descriptor = json_src_sink_object['fileDescriptor']
+    file_descriptor = None
+    if json_src_sink_object['fileDescriptor'] is not None:
+        file_descriptor = json_src_sink_object['fileDescriptor']['int']
 
     src_sink_object = orm.SrcSinkObject(uuid, base_object_host_id, base_object_permission, type, file_descriptor)
 
     return src_sink_object
 
-def packet_socket_object(json_packet_socket_object):
+def parse_packet_socket_object(json_packet_socket_object):
     '''
     This function will parse the JSON object 
     and populate the PacketSocketObject ORM object.
     '''
     uuid = json_packet_socket_object['uuid']
-    base_object_host_id = json_packet_socket_object['baseObject']['hostId']
-    base_object_permission = json_packet_socket_object['baseObject']['permission']
+    base_object_host_id = None
+    base_object_permission = None
+    
+    if json_packet_socket_object['baseObject'] is not None:
+        base_object_host_id = json_packet_socket_object['baseObject']['hostId']
+        base_object_permission = json_packet_socket_object['baseObject']['permission']
+    
     proto = json_packet_socket_object['proto']
     if_index = json_packet_socket_object['ifIndex']
     ha_type = json_packet_socket_object['haType']
@@ -175,23 +297,22 @@ def packet_socket_object(json_packet_socket_object):
 
     return packet_socket_object
 
-def host_object(json_host_object):
+def parse_host(json_host_object):
     '''
     This function will parse the JSON object 
     and populate the HostObject ORM object.
     '''
     uuid = json_host_object['uuid']
-    host_id = json_host_object['hostId']
     host_name = json_host_object['hostName']
     os_details = json_host_object['osDetails']
     host_type = json_host_object['hostType']
 
-    host_object = orm.Host(uuid, host_id, host_name, os_details, host_type)
+    host_object = orm.Host(uuid, host_name, os_details, host_type)
 
     return host_object
 
 
-def principal_object(json_principal_object):
+def parse_principal(json_principal_object):
     '''
     This function will parse the JSON object 
     and populate the Principal ORM object.
@@ -200,14 +321,17 @@ def principal_object(json_principal_object):
     type = json_principal_object['type']
     host_id = json_principal_object['hostId']
     user_id = json_principal_object['userId']
-    username = json_principal_object['username']
+    username = None
+    if json_principal_object['username'] is not None:
+        username = json_principal_object['username']['string']
+    
     
     principal_object = orm.Principal(uuid, type, host_id, user_id, username)
 
     return principal_object
 
 
-def provenance_tag_node_object(json_provenance_tag_node_object):
+def parse_provenance_tag_node(json_provenance_tag_node_object):
     '''
     This function will parse the JSON object 
     and populate the ProvenanceTagNode ORM object.

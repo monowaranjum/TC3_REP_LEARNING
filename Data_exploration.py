@@ -14,18 +14,18 @@ exploration_schema_file = 'TCCDMDatum.avsc'
 # schema = avro.schema.parse(open(os.path.join(schmea_folder, exploration_schema_file), "rb").read())
 
 # print(schema)
-print("[")
+# print("[")
 raw_objects = []
 with open(os.path.join(data_folder, exploration_file_name_json), 'r') as f:
     count = 0
     for line in f:
-        print(line)
-        print(",")
+        print(list(json.loads(line)["datum"].keys())[0][29:])
+        # print(",")
         #raw_objects.append(json.loads(line))
         count +=1
-        if count == 200:
+        if count == 5:
             break 
-print("]")
+# print("]")
 
 # print(raw_objects[0]['datum'])
 
