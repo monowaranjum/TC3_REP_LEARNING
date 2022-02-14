@@ -8,7 +8,7 @@ import psycopg2
 
 psql_connection_url = 'postgresql+psycopg2://csephase2:csephase@@localhost/darpa_tc3'
 
-def bulk_dump_in_db(objects, connection_string, batch_size = 100000):
+def bulk_dump_in_db(objects, hosts, principals, connection_string, batch_size = 100000):
     
     try:
         psql_engine = create_engine(connection_string)
@@ -16,25 +16,56 @@ def bulk_dump_in_db(objects, connection_string, batch_size = 100000):
         Session = sessionmaker(bind=psql_engine)
         session = Session()
 
-        start_idx = 0
-        end_idx = batch_size
-        dump_count = 0
-        while end_idx < len(objects) :
+        # start_idx = 0
+        # end_idx = batch_size
+        # dump_count = 0
+        # while end_idx < len(objects) :
 
-            session.bulk_save_objects(objects[start_idx:end_idx])
-            session.commit()
-            start_idx = end_idx
-            end_idx += batch_size
-            print("Dump Iteration Complete {}".format(dump_count))
-            dump_count += 1
+        #     session.bulk_save_objects(objects[start_idx:end_idx])
+        #     session.commit()
+        #     start_idx = end_idx
+        #     end_idx += batch_size
+        #     print("Dump Iteration Complete {}".format(dump_count))
+        #     dump_count += 1
 
-        end_idx = len(objects)
+        # end_idx = len(objects)
         
-        if start_idx < end_idx:
-            session.bulk_save_objects(objects[start_idx:end_idx])
-            session.commit()
+        # if start_idx < end_idx:
+        #     session.bulk_save_objects(objects[start_idx:end_idx])
+        #     session.commit()
         
+        for host in hosts:
+            q = session.query(type(host)).filter((host.__class__).uuid == host.uuid)
+            if session.query(q.exists()).scalar():
+                print("Host {} already exists in the database".format(host.uuid))
+            else:
+                session.add(host)
+                session.commit()
+                print("Host {} added to the database".format(host.uuid))
+
+        for principal in principals:
+            q = session.query(orm.Principal).filter(orm.Principal.uuid == principal.uuid)
+            if session.query(q.exists()).scalar():
+                print("Principal {} already exists in the database".format(principal.uuid))
+            else:
+                session.add(principal)
+                print("Principal {} added to the database".format(principal.uuid))
+
+        for object in object_holder:
+            q = session.query(type(object)).filter((object.__class__).uuid == object.uuid)
+            if session.query(q.exists()).scalar():
+                print("Object {} already exists in the database".format(object.uuid))
+                print(object)
+                print("\n")
+            else:
+                session.add(object)
+                print("Object {} added to the database".format(object.uuid))
+        
+        session.commit()
+
         session.close()
+
+        
     
     except Exception as e:
         traceback.print_exc()
@@ -45,10 +76,10 @@ def bulk_dump_in_db(objects, connection_string, batch_size = 100000):
 
 
 data_files = [
-    '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json'
-    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json.1',
-    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json.2',
-    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official-1.json',
+    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json'
+    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json.1'
+    # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official.json.2'
+    '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official-1.json'
     # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official-1.json.1',
     # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official-1.json.2',
     # '/mnt/8tb/csenrc/tc3/data/cadets/ta1-cadets-e3-official-1.json.3',
@@ -73,6 +104,9 @@ src_sink_object_count = 0
 host_count = 0
 principal_count = 0
 provenance_tag_node_count = 0
+
+host_holder = []
+principal_holder = []
 
 for data_file_name in data_files:
     print("Parsing file: {}".format(data_file_name))
@@ -110,10 +144,10 @@ for data_file_name in data_files:
                     object_holder.append(ps.parse_src_sink_object(db_object[object_type]))
                     src_sink_object_count += 1
                 elif object_type[29:] == 'Host':
-                    object_holder.append(ps.parse_host(db_object[object_type]))
+                    host_holder.append(ps.parse_host(db_object[object_type]))
                     host_count += 1
                 elif object_type[29:] == 'Principal':
-                    object_holder.append(ps.parse_principal(db_object[object_type]))
+                    principal_holder.append(ps.parse_principal(db_object[object_type]))
                     principal_count += 1
                 elif object_type[29:] == 'ProvenanceTagNode':
                     object_holder.append(ps.parse_provenance_tag_node(db_object[object_type]))
@@ -121,6 +155,8 @@ for data_file_name in data_files:
                 else:
                     print(object_type[29:])
 
+                if len(object_holder)>20:
+                    break
             except Exception as e:
                 traceback.print_exc()
                 print("\n\n")
@@ -128,8 +164,10 @@ for data_file_name in data_files:
                 #print("Error in parsing line: " + line)
                 break
 
-    bulk_dump_in_db(object_holder, psql_connection_url, batch_size=100000)
+    bulk_dump_in_db(object_holder, host_holder, principal_holder, psql_connection_url, batch_size=100000)
     object_holder.clear()
+    host_holder.clear()
+
 
 print("Subject: {}".format(subject_count))
 print("Event: {}".format(event_count))
