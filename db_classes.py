@@ -7,7 +7,8 @@ class Subject(BASE):
     __tablename__ = 'Subject'
     __table_args__ = {'extend_existing': True}
 
-    uuid = Column(String(256), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    uuid = Column(String(256))
     type = Column(String(256))
     cid = Column(Integer)
     parent_subject = Column(String(256))
@@ -41,11 +42,11 @@ class Subject(BASE):
     def __str__(self):
         return 'Subject(uuid={}, type={}, cid={}, parent_subject={}, host_id={}, local_principal={}, start_time_stamp_nanos={}, unit_id={}, iteration={}, count={}, cmd_line={}, privilege_level={}, imported_libraries={}, exported_libraries={})'.format(self.uuid, self.type, self.cid, self.parent_subject, self.host_id, self.local_principal, self.start_time_stamp_nanos, self.unit_id, self.iteration, self.count, self.cmd_line, self.privilege_level, self.imported_libraries, self.exported_libraries)
 
-
 class Event(BASE):
     __tablename__ = 'Event'
     __table_args__ = {'extend_existing': True}
 
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     sequence = Column(BigInteger)
     type = Column(String(256))
@@ -83,10 +84,11 @@ class Event(BASE):
     def __str__(self):
         return 'Event(uuid={}, sequence={}, type={}, thread_id={}, host_id={}, subject={}, predicate_object={}, prediacte_object_path={}, predicate_object_2={}, predicate_object_path_2={}, time_stamp_nanos={}, name={}, location={}, size={}, program_point={})'.format(self.uuid, self.sequence, self.type, self.thread_id, self.host_id, self.subject, self.predicate_object, self.prediacte_object_path, self.predicate_object_2, self.predicate_object_path_2, self.time_stamp_nanos, self.name, self.location, self.size, self.program_point)
 
-
 class FileObject(BASE):
     __tablename__ = 'FileObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -110,6 +112,8 @@ class FileObject(BASE):
 class UnnamedPipeObject(BASE):
     __tablename__ = 'UnnamedPipeObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -129,13 +133,12 @@ class UnnamedPipeObject(BASE):
 
     def __str__(self):
         return 'UnnamedPipeObject(uuid={}, base_object_host_id={}, base_object_permission={}, source_file_descriptor={}, sink_file_descriptor={}, source_uuid={}, sink_uuid={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.source_file_descriptor, self.sink_file_descriptor, self.source_uuid, self.sink_uuid)
-
-
-
     
 class MemoryObject(BASE):
     __tablename__ = 'MemoryObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -159,6 +162,8 @@ class MemoryObject(BASE):
 class NetFlowObject(BASE):
     __tablename__ = 'NetflowObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -183,10 +188,11 @@ class NetFlowObject(BASE):
     def __str__(self):
         return 'NetFlowObject(uuid={}, base_object_host_id={}, base_object_permission={}, local_address={}, local_port={}, remote_address={}, remote_port={}, ip_protocol={}, file_descriptor={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.local_address, self.local_port, self.remote_address, self.remote_port, self.ip_protocol, self.file_descriptor)
 
-
 class SrcSinkObject(BASE):
     __tablename__ = 'SrcSinkObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -206,6 +212,8 @@ class SrcSinkObject(BASE):
 class PacketSocketObject(BASE):
     __tablename__ = 'PacketSocketObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
@@ -228,10 +236,11 @@ class PacketSocketObject(BASE):
     def __str__(self):
         return 'PacketSocketObject(uuid={}, base_object_host_id={}, base_object_permission={}, proto={}, if_index={}, ha_type={}, pkt_type={}, addr={})'.format(self.uuid, self.base_object_host_id, self.base_object_permission, self.proto, self.if_index, self.ha_type, self.pkt_type, self.addr)
 
-
 class Host(BASE):
     __tablename__ = 'Host'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     host_name = Column(String(256))
     os_details = Column(String(256))
@@ -246,11 +255,11 @@ class Host(BASE):
     def __str__(self):
         return 'Host(uuid={}, host_name={}, os_details={}, host_type={})'.format(self.uuid, self.host_name, self.os_details, self.host_type)
 
-
 class Principal(BASE):
     __tablename__ = 'Principal'
     __table_args__ = {'extend_existing': True}
 
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     type = Column(String(256))
     host_id = Column(String(256))
@@ -270,6 +279,8 @@ class Principal(BASE):
 class ProvenanceTagNode(BASE):
     __tablename__ = 'ProvenanceTagNode'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     tag_id = Column(String(256), primary_key=True)
     flow_object = Column(String(256))
     host_id = Column(String(256))
@@ -288,10 +299,11 @@ class ProvenanceTagNode(BASE):
     def __str__(self):
         return 'ProvenanceTagNode(tag_id={}, flow_object={}, host_id={}, subject={}, system_call={}, program_point={})'.format(self.tag_id, self.flow_object, self.host_id, self.subject, self.system_call, self.program_point)
 
-
 class RegistryKeyObject(BASE):
     __tablename__ = 'RegistryKeyObject'
     __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(256), primary_key=True)
     base_object_host_id = Column(String(256))
     base_object_permission = Column(Integer)
