@@ -51,7 +51,8 @@ def parse_subject(json_subject):
     if json_subject['exportedLibraries'] is not None:
         exported_libraries = json_subject['exportedLibraries'].tostring()
 
-    subject = orm.Subject(uuid, type, cid, parent_subject, host_id, local_prinicpal, start_time_stamp_nanos, unit_id, iteration, count, cmd_line, privilege_level, imported_libraries, exported_libraries)
+    subject = orm.Subject(uuid, type, cid, parent_subject, host_id, local_prinicpal, 
+    start_time_stamp_nanos, unit_id, iteration, count, cmd_line, privilege_level, imported_libraries, exported_libraries)
 
     return subject
 
