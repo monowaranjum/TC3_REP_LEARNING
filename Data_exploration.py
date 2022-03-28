@@ -7,7 +7,7 @@ import json
 
 data_folder = '/mnt/8tb/csenrc/tc3/data/cadets'
 schmea_folder = '/mnt/8tb/csenrc/tc3/schema'
-exploration_file_name_json = 'ta1-cadets-e3-official.json'
+exploration_file_name_json = 'ta1-cadets-e3-official-1.json'
 exploration_file_name_bin = 'ta1-cadets-e3-official.bin'
 exploration_schema_file = 'TCCDMDatum.avsc'
 
@@ -19,11 +19,11 @@ raw_objects = []
 with open(os.path.join(data_folder, exploration_file_name_json), 'r') as f:
     count = 0
     for line in f:
-        print(list(json.loads(line)["datum"].keys())[0][29:])
-        # print(",")
+        # print(list(json.loads(line)["datum"].keys())[0][29:])
+        print(line)
         #raw_objects.append(json.loads(line))
         count +=1
-        if count == 5:
+        if count == 2:
             break 
 # print("]")
 
