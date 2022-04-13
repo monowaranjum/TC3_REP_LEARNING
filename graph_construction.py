@@ -310,7 +310,7 @@ if __name__ == "__main__":
     session = Session()
 
     total_event_count = 41350895 # Ran a count on the event table
-    batch_size = 1000000
+    batch_size = 500000
     event_list = []
 
     with open(index_file_location,'r') as index_file:
@@ -318,12 +318,14 @@ if __name__ == "__main__":
 
     index_file.close()
 
+    print("INDEX LOADED.")
+
     for i in range(1,total_event_count,batch_size):
         start_index = i
         end_index = i+batch_size
         event_list = session.query(orm.Event).filter(orm.Event.id>=start_index, orm.Event.id<end_index)
         process_events(session, event_list)
-        event_list.clear()
+        #event_list.clear()
         print('Cleared event from id={} to id = {}'.format(start_index,end_index))
 
     print("********************* PROCESSING COMPLETE ********************")

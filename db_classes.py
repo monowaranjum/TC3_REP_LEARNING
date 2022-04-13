@@ -255,7 +255,7 @@ class Host(BASE): # Cadets have a single host rebooted 3 times. TBH, I thought t
     def __str__(self):
         return 'Host(uuid={}, host_name={}, os_details={}, host_type={})'.format(self.uuid, self.host_name, self.os_details, self.host_type)
 
-class Principal(BASE):
+class Principal(BASE): # Principal == USER
     __tablename__ = 'Principal'
     __table_args__ = {'extend_existing': True}
 
@@ -276,7 +276,7 @@ class Principal(BASE):
     def __str__(self):
         return 'Principal(uuid={}, type={}, host_id={}, user_id={}, username={})'.format(self.uuid, self.type, self.host_id, self.user_id, self.username)
 
-class ProvenanceTagNode(BASE):
+class ProvenanceTagNode(BASE): # CADETS dont have any of this object 
     __tablename__ = 'ProvenanceTagNode'
     __table_args__ = {'extend_existing': True}
 
