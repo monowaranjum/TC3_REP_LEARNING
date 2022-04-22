@@ -120,13 +120,16 @@ def parse_file_object(json_file_object):
     and populate the File ORM object.
     '''
     uuid = json_file_object['uuid']
+
+    condition = lambda x: int(x, base=16) if x is not None else None 
     
     base_object_host_id = None
     base_object_permission = None
 
     if json_file_object['baseObject'] is not None:
         base_object_host_id = json_file_object['baseObject']['hostId']
-        base_object_permission = json_file_object['baseObject']['permission']
+        if json_file_object['baseObject']['permission'] is not None:
+            base_object_permission = json_file_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
     type = json_file_object['type']
     file_descriptor = None
     
@@ -141,7 +144,7 @@ def parse_file_object(json_file_object):
     if json_file_object['size'] is not None:
         size = json_file_object['size']['long']
 
-    file_object = orm.FileObject(uuid, base_object_host_id, base_object_permission, type, file_descriptor, local_principal, size)
+    file_object = orm.FileObject(uuid, base_object_host_id, condition(base_object_permission) , type, file_descriptor, local_principal, size)
 
     return file_object
 
@@ -152,11 +155,14 @@ def parse_unnamed_pipe_object(json_unnamed_pipe_object):
     and populate the UnnamedPipeObject ORM object.
     '''
     uuid = json_unnamed_pipe_object['uuid']
+    condition = lambda x: int(x, base=16) if x is not None else None
+
     base_object_host_id = None
     base_object_permission = None
     if json_unnamed_pipe_object['baseObject'] is not None:
         base_object_host_id = json_unnamed_pipe_object['baseObject']['hostId']
-        base_object_permission = json_unnamed_pipe_object['baseObject']['permission']
+        if json_unnamed_pipe_object['baseObject']['permission'] is not None:
+            base_object_permission = json_unnamed_pipe_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
 
     source_file_descriptor = None
     if json_unnamed_pipe_object['sourceFileDescriptor'] is not None:
@@ -173,7 +179,7 @@ def parse_unnamed_pipe_object(json_unnamed_pipe_object):
     if json_unnamed_pipe_object['sinkUUID'] is not None:
         sink_uuid = json_unnamed_pipe_object['sinkUUID']['com.bbn.tc.schema.avro.cdm18.UUID']
 
-    unnamed_pipe_object = orm.UnnamedPipeObject(uuid, base_object_host_id, base_object_permission, source_file_descriptor, sink_file_descriptor, source_uuid, sink_uuid)
+    unnamed_pipe_object = orm.UnnamedPipeObject(uuid, base_object_host_id, condition(base_object_permission), source_file_descriptor, sink_file_descriptor, source_uuid, sink_uuid)
 
     return unnamed_pipe_object
 
@@ -184,15 +190,18 @@ def parse_registry_key_object(json_registry_key_object):
     and populate the RegistryKeyObject ORM object.
     '''
     uuid = json_registry_key_object['uuid']
+    condition = lambda x: int(x, base=16) if x is not None else None
+
     base_object_host_id = None
     base_object_permission = None
     if json_registry_key_object['baseObject'] is not None:
         base_object_host_id = json_registry_key_object['baseObject']['hostId']
-        base_object_permission = json_registry_key_object['baseObject']['permission']
+        if json_registry_key_object['baseObject']['permission'] is not None:
+            base_object_permission = json_registry_key_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
 
     key = json_registry_key_object['key']
 
-    registry_key_object = orm.RegistryKeyObject(uuid, base_object_host_id, base_object_permission, key)
+    registry_key_object = orm.RegistryKeyObject(uuid, base_object_host_id, condition(base_object_permission), key)
 
     return registry_key_object
 
@@ -202,11 +211,14 @@ def parse_memory_object(json_memory_object):
     and populate the MemoryObject ORM object.
     '''
     uuid = json_memory_object['uuid']
+    condition = lambda x: int(x, base=16) if x is not None else None
+
     base_object_host_id = None
     base_object_permission = None
     if json_memory_object['baseObject'] is not None:
         base_object_host_id = json_memory_object['baseObject']['hostId']
-        base_object_permission = json_memory_object['baseObject']['permission']
+        if json_memory_object['baseObject']['permission'] is not None:
+            base_object_permission = json_memory_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
 
     memory_address = json_memory_object['memoryAddress']
     page_number = None
@@ -219,7 +231,7 @@ def parse_memory_object(json_memory_object):
     if json_memory_object['size'] is not None:
         size = json_memory_object['size']['long']
     
-    memory_object = orm.MemoryObject(uuid, base_object_host_id, base_object_permission, memory_address, page_number, page_offset, size)
+    memory_object = orm.MemoryObject(uuid, base_object_host_id, condition(base_object_permission), memory_address, page_number, page_offset, size)
 
     return memory_object
 
@@ -229,12 +241,14 @@ def parse_netflow_object(json_net_flow_object):
     and populate the NetFlowObject ORM object.
     '''
     uuid = json_net_flow_object['uuid']
+    condition = lambda x: int(x, base=16) if x is not None else None
     base_object_host_id = None
     base_object_permission = None
     
     if json_net_flow_object['baseObject'] is not None:
         base_object_host_id = json_net_flow_object['baseObject']['hostId']
-        base_object_permission = json_net_flow_object['baseObject']['permission']
+        if json_net_flow_object['baseObject']['permission'] is not None:
+            base_object_permission = json_net_flow_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
 
     local_address = json_net_flow_object['localAddress']
     local_port = json_net_flow_object['localPort']
@@ -248,7 +262,7 @@ def parse_netflow_object(json_net_flow_object):
     if json_net_flow_object['fileDescriptor'] is not None:
         file_descriptor = json_net_flow_object['fileDescriptor']['int']
     
-    net_flow_object = orm.NetFlowObject(uuid, base_object_host_id, base_object_permission, local_address, local_port, remote_address, remote_port, ip_protocol, file_descriptor)
+    net_flow_object = orm.NetFlowObject(uuid, base_object_host_id, condition(base_object_permission), local_address, local_port, remote_address, remote_port, ip_protocol, file_descriptor)
 
     return net_flow_object
 
@@ -258,20 +272,21 @@ def parse_src_sink_object(json_src_sink_object):
     and populate the SrcSinkObject ORM object.
     '''
     uuid = json_src_sink_object['uuid']
-
+    condition = lambda x: int(x, base=16) if x is not None else None
     base_object_host_id = None
     base_object_permission = None
     
     if json_src_sink_object['baseObject'] is not None:
         base_object_host_id = json_src_sink_object['baseObject']['hostId']
-        base_object_permission = json_src_sink_object['baseObject']['permission']
+        if json_src_sink_object['baseObject']['permission'] is not None:
+            base_object_permission = json_src_sink_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
     
     type = json_src_sink_object['type']
     file_descriptor = None
     if json_src_sink_object['fileDescriptor'] is not None:
         file_descriptor = json_src_sink_object['fileDescriptor']['int']
 
-    src_sink_object = orm.SrcSinkObject(uuid, base_object_host_id, base_object_permission, type, file_descriptor)
+    src_sink_object = orm.SrcSinkObject(uuid, base_object_host_id, condition(base_object_permission), type, file_descriptor)
 
     return src_sink_object
 
@@ -281,12 +296,14 @@ def parse_packet_socket_object(json_packet_socket_object):
     and populate the PacketSocketObject ORM object.
     '''
     uuid = json_packet_socket_object['uuid']
+    condition = lambda x: int(x, base=16) if x is not None else None
     base_object_host_id = None
     base_object_permission = None
     
     if json_packet_socket_object['baseObject'] is not None:
         base_object_host_id = json_packet_socket_object['baseObject']['hostId']
-        base_object_permission = json_packet_socket_object['baseObject']['permission']
+        if json_packet_socket_object['baseObject']['permission'] is not None:
+            base_object_permission = json_packet_socket_object['baseObject']['permission']['com.bbn.tc.schema.avro.cdm18.SHORT']
     
     proto = json_packet_socket_object['proto']
     if_index = json_packet_socket_object['ifIndex']
@@ -294,7 +311,7 @@ def parse_packet_socket_object(json_packet_socket_object):
     pkt_type = json_packet_socket_object['pktType']
     addr = json_packet_socket_object['addr']
 
-    packet_socket_object = orm.PacketSocketObject(uuid, base_object_host_id, base_object_permission, proto, if_index, ha_type, pkt_type, addr)
+    packet_socket_object = orm.PacketSocketObject(uuid, base_object_host_id, condition(base_object_permission), proto, if_index, ha_type, pkt_type, addr)
 
     return packet_socket_object
 
